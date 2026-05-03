@@ -1,4 +1,4 @@
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request
 
 app = Flask(__name__)
 
@@ -6,12 +6,9 @@ app = Flask(__name__)
 def inicio():
     return """
     <html>
-      <head>
-        <title>Teste Python</title>
-      </head>
       <body style="font-family: Arial; padding: 40px;">
-        <h1>Servidor Python funcionando</h1>
-        <p>Se você está vendo isso, o Flask está rodando certo.</p>
+        <h1>Backend NFS-e online</h1>
+        <p>O sistema está funcionando.</p>
         <p><a href="/status">Ver status</a></p>
       </body>
     </html>
@@ -21,5 +18,17 @@ def inicio():
 def status():
     return jsonify({
         "ok": True,
-        "mensagem": "Python funcionando com sucesso"
+        "mensagem": "Backend NFS-e funcionando"
+    })
+
+@app.route("/emitir-nfse", methods=["POST"])
+def emitir_nfse():
+    dados = request.get_json(silent=True) or {}
+
+    return jsonify({
+        "ok": True,
+        "mensagem": "Recebido com sucesso",
+        "xml_recebido": bool(dados.get("xml_nfse")),
+        "cnpj_emitente": dados.get("cnpj_emitente", ""),
+        "drive_file_id": dados.get("drive_file_id", "")
     })
